@@ -36,7 +36,6 @@ class FrontEndTestCase(TestCase):
             post = Post(title="Post {} Title".format(count),
                         text="foo",
                         author=author)
-            print(f"--- Post:{post} ----")
             if count < 6:
                 # publish the first five posts
                 pubdate = self.now - self.timedelta * count
@@ -59,8 +58,10 @@ class FrontEndTestCase(TestCase):
         #           generation. We can retrieve context values using the [] operator.
         #           e.g. response.context['name']
         # .status_code: is the HTTP status of response, as an integer.
-        resp_text = resp.content.decode(resp.charset)
-        self.assertTrue("Recent Posts" in resp_text)
+
+        #resp_text = resp.content.decode(resp.charset)
+        #self.assertTrue("Recent Posts" in resp_text)
+        self.assertContains(resp, 'Recent Posts', count=1)
         for count in range(1, 11):
             title = "Post {} Title".format(count)
             if count < 6:
@@ -73,3 +74,17 @@ class FrontEndTestCase(TestCase):
                 self.assertContains(resp, title, count=1)
             else:
                 self.assertNotContains(resp, title)
+
+    def test_detail_only_published(self):
+        for count in range(1, 11):
+            title = "Post {} Title".format(count)
+            post = Post.objects.get(title=title)
+            # NOTE: we need to include the '/' in fornt of the 'posts/{}/'
+            # to tell the urls.py to find the correct view.
+            resp = self.client.get('/posts/{}/'.format(post.pk))
+            #resp = self.client.get('localhost:8000/posts/{}/'.format(post.pk))
+            if count < 6:
+                self.assertEqual(resp.status_code, 200)
+                self.assertContains(resp, title)
+            else:
+                self.assertEqual(resp.status_code, 404)
