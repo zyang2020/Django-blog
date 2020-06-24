@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>My Blog Login</h1>
+<form action="" method="POST">
+  {# To provent the login page from Cross-Site Request Forgery, we need to #}
+  {# include the following template tag in our login.html.#}
+  {% csrf_token %}
+  {{ form.as_p }}
+  <p><input type="submit" value="Log In"></p>
+</form>
+{% endblock %}

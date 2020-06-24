@@ -82,7 +82,6 @@ class FrontEndTestCase(TestCase):
             # NOTE: we need to include the '/' in fornt of the 'posts/{}/'
             # to tell the urls.py to find the correct view.
             resp = self.client.get('/posts/{}/'.format(post.pk))
-            #resp = self.client.get('localhost:8000/posts/{}/'.format(post.pk))
             if count < 6:
                 self.assertEqual(resp.status_code, 200)
                 self.assertContains(resp, title)
