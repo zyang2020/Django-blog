@@ -3,7 +3,9 @@
 <h1> Recent Posts</h1>
 {% for post in posts %}
 <div class="post">
-   <h2><a href="{% url 'blog_detail' post.pk %}">{{post}}</a>
+   <!-- <h2><a href="{% url 'blog_detail' post.pk %}">{{post}}</a> -->
+   <!-- using obj.get_absolute_url() to get the url for each obj. -->
+   <h2><a href="{{post.get_absolute_url}}">{{post}}</a>
    </h2>
    <p class='byline'>
      Posted by {{post.author.username}} &mdash; {{post.published_date}}
